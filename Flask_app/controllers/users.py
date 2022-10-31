@@ -1,6 +1,8 @@
 from Flask_app import app
 from flask import render_template, redirect, session, request
 from Flask_app.models.user import User
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
@@ -21,7 +23,13 @@ def r_login():
 @app.route('/register', methods = ['POST'])
 def f_register():
     if User.val_new_user(request.form):
-        session['user_id'] = User.add_user(request.form)
+        data = {
+            'first_name': request.form['first_name'],
+            'last_name': request.form['last_name'],
+            'email': request.form['email'],
+            'password': bcrypt.generate_password_hash(request.form['password'])
+        }
+        session['user_id'] = User.add_user(data)
         return redirect('/home')
     else:
         return redirect('/login')
@@ -37,10 +45,10 @@ def f_login():
 
 @app.route('/logout')
 def logout():
-    # clear session
-    # redirect to home page
-    pass
+    session.clear()
+    return redirect('/login')
 
 @app.route('/home')
 def r_home():
-    return render_template('home.html')
+    id = session['user_id']
+    return render_template('home.html', id = id)

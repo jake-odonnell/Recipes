@@ -1,5 +1,5 @@
 from Flask_app import app
-from flask import render_template, redirect, session, flash
+from flask import render_template, redirect, session, request
 from Flask_app.models.user import User
 
 @app.route('/')
@@ -18,14 +18,18 @@ def r_login():
         }
     return render_template('login.html', info = data)
 
-@app.route('register')
+@app.route('/register', methods = ['POST'])
 def f_register():
-    # validate info
+    if User.val_new_user(request.form):
+        session['user_id'] = User.add_user(request.form)
+        return redirect('/home')
+    else:
+        return redirect('/login')
+
     # add to data base
     # login
-    return redirect('/home')
 
-@app.route('f-login')
+@app.route('/f-login')
 def f_login():
     # pull account
     # login
@@ -36,3 +40,7 @@ def logout():
     # clear session
     # redirect to home page
     pass
+
+@app.route('/home')
+def r_home():
+    return render_template('home.html')

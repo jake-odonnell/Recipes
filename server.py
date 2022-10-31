@@ -1,4 +1,3 @@
-from distutils.log import debug
 from Flask_app import app
 from Flask_app.controllers import users
 

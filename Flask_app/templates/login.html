@@ -12,15 +12,17 @@
         <div class="form d-flex bg-dark col-4 p-3  mt-3">
             <form action="/register" method="post">
                 <h1 class="text-primary">Registration</h1>
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <div class="container bg-warning text-danger font-weight-bold">
-                            {% for message in messages %}
-                                <p>{{message}}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
+                {% if session['is_reg'] == True%}
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class="container bg-warning text-danger font-weight-bold">
+                                {% for message in messages %}
+                                    <p>{{message}}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
                 <label for="first_name" class="text-white col-12 mt-2">First Name:</label>
                 <input type="text" class="col-12" name="first_name" value="{{info['first_name']}}">
                 <label for="last_name" class="text-white col-12 mt-2">Last Name:</label>
@@ -36,8 +38,19 @@
         </div>
 
         <div class="form d-flex bg-dark col-4 p-3  mt-3">
-            <form action="/register" method = "post">
+            <form action="/f-login" method = "post">
                 <h1 class="text-success">Login</h1>
+                {% if session['is_reg'] == False%}
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class="container bg-warning text-danger font-weight-bold">
+                                {% for message in messages %}
+                                    <p>{{message}}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
                 <label for="email" class="text-white col-12 mt-2">Email:</label>                    
                 <input type="email" class="col-12" name="email">
                 <label for="password" class="text-white col-12 mt-2">Password:</label>

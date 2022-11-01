@@ -38,6 +38,13 @@ class User:
         if len(data['password']) < 8:
             is_val = False
             flash('Must have valid password')
+        if not str.isalnum(data['password']):
+            is_val = False
+            flash('Must have 1 letter and 1 number')
+        else:
+            if str.isalpha(data['password']) or str.isnumeric(data['password']):
+                is_val = False
+                flash('Must have 1 letter and 1 number')
         if data['password'] != data['conf_password']:
             is_val = False
             flash('Passwords must match')
@@ -48,3 +55,8 @@ class User:
         query = 'SELECT email FROM users'
         emails = connectToMySQL('users').query_db(query)
         return emails
+
+    @staticmethod
+    def login(data:dict):
+        query = 'SELECT id, password FROM users WHERE email = %(email)s'
+        return connectToMySQL('users').query_db(query, data)

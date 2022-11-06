@@ -10,7 +10,7 @@
 <body>
     <div class="container d-flex justify-content-around">
         <div class="form d-flex bg-dark col-4 p-3  mt-3">
-            <form action="/register" method="post">
+            <form action="/add-user" method="post">
                 <h1 class="text-primary">Registration</h1>
                 {% if session['is_reg'] == True%}
                     {% with messages = get_flashed_messages() %}
@@ -38,7 +38,7 @@
         </div>
 
         <div class="form d-flex bg-dark col-4 p-3  mt-3">
-            <form action="/f-login" method = "post">
+            <form action="/login" method = "post">
                 <h1 class="text-success">Login</h1>
                 {% if session['is_reg'] == False%}
                     {% with messages = get_flashed_messages() %}

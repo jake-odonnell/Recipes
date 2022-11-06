@@ -1,8 +1,7 @@
 from Flask_app import app
 from flask import render_template, redirect, session, request, flash
 from Flask_app.models.user import User
-from flask_bcrypt import Bcrypt
-bcrypt = Bcrypt(app)
+from Flask_app import bcrypt
 
 @app.route('/')
 def home():
@@ -11,7 +10,11 @@ def home():
 @app.route('/login')
 def r_login():
     if session:
-        data = session
+        data = {
+        'first_name': session['first_name'],
+        'last_name': session['last_name'],
+        'email': session['email']
+        }
     else:
         data = {
             'first_name': '',
@@ -21,7 +24,7 @@ def r_login():
         print(data)
     return render_template('login.html', info = data)
 
-@app.route('/register', methods = ['POST'])
+@app.route('/add-user', methods = ['POST'])
 def f_register():
     if User.val_new_user(request.form):
         data = {
@@ -39,20 +42,14 @@ def f_register():
         session['email'] = request.form['email']
         return redirect('/login')
 
-@app.route('/f-login', methods = ['POST'])
+@app.route('/login', methods = ['POST'])
 def f_login():
-    if request.form['email'] == '' or request.form['password'] == '':
-        session['is_reg'] = False
-        flash('Invalid username/ password')
-        return redirect('/login')
+    print(request.form)
     user = User.login(request.form)
-    if bcrypt.check_password_hash(user[0]['password'], request.form['password']):
-        session['user_id'] = user[0]['id']
-        return redirect('/home')
-    else:
-        session['is_reg'] = False
-        flash('Invalid username/ password')
+    if user:
         return redirect('/login')
+    else:
+        return redirect('/home')
 
 @app.route('/logout')
 def logout():

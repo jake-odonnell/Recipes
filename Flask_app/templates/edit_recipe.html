@@ -10,7 +10,7 @@
 <body>
     <div class="container mx-auto mt-3">
         <div class="nav-bar d-flex justify-content-around mb-3">
-            <h1>Add a New Recipe!</h1>
+            <h1>Welcome {{user.first_name}}!</h1>
             <div class="d-flex justify-content-between">
                 <div class="d-flex">
                     <form action="/home" class="text-center">
@@ -23,44 +23,61 @@
             </div>
         </div>
         <div class="container">
-            <form action="/add-recipe" class="mh-100 d-flex justify-content-around">
+            <form action="/edit-recipe" class="mh-100 d-flex justify-content-around" method = "post">
                 <div class="col-6">
-                    {{with messages as get_flashed_messages()}}
-                        {{if messages:}}
-                            {{for message in messages:}}
-                                <p class="text-center">{% message %}</p>
-                            {{endfor}}
-                        {{endif}}
-                    {{endwith}}
+                    {%with messages = get_flashed_messages()%}
+                        {%if messages%}
+                            {%for message in messages%}
+                                <p class="text-center">{{message}}</p>
+                            {%endfor%}
+                        {%endif%}
+                    {%endwith%}
                     <div>
                         <label for="name" class="label col-3">Name:</label>
-                        <input type="text" name="name" class="col-8" value="{% recipe.name %}">
+                        <input type="text" name="name" class="col-8" value="{{recipe.name}}">
                     </div>
                     <div>
                         <label for="descrption" class="label col-3">Description:</label>
-                        <input type="text" name="description" class="col-8" value="{% recipe.description %}">>
+                        <input type="text" name="description" class="col-8" value="{{recipe.description}}">>
                     </div>
                     <div>
                         <label for="instructions" class="label col-3">Instructions:</label>
-                        <input type="text" name="instructions" class="col-8" value="{% recipe.instructions %}">>
+                        <input type="text" name="instructions" class="col-8" value="{{recipe.instructions}}">>
                     </div>
                 </div>
                 <div class="col-6 text-center d-inline">
                     <div>
                         <label for="made_at">Date Cooked/ Made:</label>
-                        <input type="date" name="made_at"  value="{% recipe.date %}">>
+                        <input type="date" name="made_at"  value="{{recipe.made_at.strftime('%Y-%m-%d')}}">
                     </div>
                     <div>
-                        <div class="d-inline">
-                            <div>
-                                <input type="radio" name="under">
-                                <label for="under">Under 30 Minutes</label>
+                        {% if recipe.under == 'Yes' %}
+                            <div class="d-inline">
+                                <div>
+                                    <p>under</p>
+                                    <input type="radio" name="under" value = 'Yes' checked = 'checked'>
+                                    <label for="under">Under 30 Minutes</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="under" value = 'No'>
+                                    <label for="under">Over 30 Minutes</label>
+                                </div>
                             </div>
-                            <div>
-                                <input type="radio" name="over">
-                                <label for="over">Over 30 Minutes</label>
+                            {% else %}
+                            <div class="d-inline">
+                                <div>
+                                    <p>over</p>
+                                    <input type="radio" name="under" value = 'Yes'>
+                                    <label for="under">Under 30 Minutes</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="under" checked = 'checked' value = 'No'>
+                                    <label for="under">Over 30 Minutes</label>
+                                </div>
                             </div>
-                        </div>
+                            {% endif %}
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <input type="hidden" name="id" value = '{{recipe.id}}'>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>

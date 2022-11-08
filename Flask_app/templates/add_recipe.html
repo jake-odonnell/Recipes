@@ -23,25 +23,28 @@
             </div>
         </div>
         <div class="container">
-            <form action="/add-recipe" class="mh-100 d-flex justify-content-around">
+            <div class="bg-warning text-danger font-weight-bold">
+                {%with messages = get_flashed_messages()%}
+                    {%if messages%}
+                        {%for message in messages%}
+                            <p class="text-center">{{message}}</p>
+                        {%endfor%}
+                    {%endif%}
+                {%endwith%}
+            </div>
+            <form action="/add-recipe" class="mh-100 d-flex justify-content-around" method="post">
                 <div class="col-6">
-                    {{with messages as get_flashed_messages()}}
-                        {{if messages:}}
-                            {{for message in messages:}}
-                                <p class="text-center">{% message %}</p>
-                            {{endfor}}
-                        {{endif}}
-                    {{endwith}}
+                    <input type="hidden" name="user_id" value="{{user_id}}">
                     <div>
-                        <label for="name" class="label col-3">Name:</label>
+                        <label for="name" class="label col-4">Name:</label>
                         <input type="text" name="name" class="col-8">
                     </div>
                     <div>
-                        <label for="descrption" class="label col-3">Description:</label>
+                        <label for="descrption" class="label col-4">Description:</label>
                         <input type="text" name="description" class="col-8">
                     </div>
                     <div>
-                        <label for="instructions" class="label col-3">Instructions:</label>
+                        <label for="instructions" class="label col-4">Instructions:</label>
                         <input type="text" name="instructions" class="col-8">
                     </div>
                 </div>
@@ -53,12 +56,12 @@
                     <div>
                         <div class="d-inline">
                             <div>
-                                <input type="radio" name="under">
+                                <input type="radio" name="under" value = 'Yes'>
                                 <label for="under">Under 30 Minutes</label>
                             </div>
                             <div>
-                                <input type="radio" name="over">
-                                <label for="over">Over 30 Minutes</label>
+                                <input type="radio" name="under" value = "No">
+                                <label for="under">Over 30 Minutes</label>
                             </div>
                         </div>
                     </div>

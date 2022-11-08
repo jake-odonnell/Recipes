@@ -13,7 +13,7 @@
             <h1>Welcome {{user.first_name}}</h1>
             <div class="d-flex justify-content-between">
                 <div class="d-flex">
-                    <form action="/add-recipe" class="text-center">
+                    <form action="/add_recipe" class="text-center">
                         <button type="submit" class="btn btn-primary m-3">Add Recipe</button>
                     </form>
                     <form action="/logout" class="text-center">
@@ -31,18 +31,18 @@
                     <th>Actions</th>
                 </thead>
                 <tbody>
-                    {{for recipe in recipes:}}
+                    {%for recipe in recipes%}
                         <tr>
-                            <td>{%recipe.name%}</td>
-                            <td>{%recipe.under%}</td>
-                            <td>{%recipe.creator%}</td>
-                            {{if recipe.user_id == user.id:}}
-                                <td><a href="/view/{{recipe.id}}" class="link">View</a> <a href="/edit/{{recipe.id}}" class="link">Edit</a> <a href="/delete/{{recipe.id}}" class="link">Delete</a></td>
-                            {{else:}}
+                            <td>{{recipe.name}}</td>
+                            <td>{{recipe.under}}</td>
+                            <td>{{recipe.creator}}</td>
+                            {%if recipe.user_id == user.id%}
+                                <td><a href="/view/{{recipe.id}}" class="link">View</a> | <a href="/edit/{{recipe.id}}" class="link">Edit</a> | <a href="/delete/{{recipe.id}}" class="link">Delete</a></td>
+                            {%else%}
                                 <td><a href="/view/{{recipe.id}}" class="link">View</a></td>
-                            {{endif}}
+                            {%endif%}
                             </tr>
-                    {{endfor}}
+                    {%endfor%}
                 </tbody>
             </table>
     </div>

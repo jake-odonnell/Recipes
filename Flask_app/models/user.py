@@ -2,6 +2,7 @@ from Flask_app.config.mysqlconnection import connectToMySQL
 import re
 from flask import flash, session
 from Flask_app import bcrypt
+from .recipe import Recipe
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 class User:
@@ -12,11 +13,12 @@ class User:
         self.email = data['email']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
+        self.recipes = []
     
     @staticmethod
     def add_user(data:dict):
         query = 'INSERT INTO users (first_name, last_name, email, password) VALUES (%(first_name)s, %(last_name)s, %(email)s,%(password)s);'
-        id = connectToMySQL('users').query_db(query, data)
+        id = connectToMySQL('recipes').query_db(query, data)
         return id
 
     @classmethod
@@ -54,7 +56,7 @@ class User:
     @staticmethod
     def get_all_emails():
         query = 'SELECT email FROM users'
-        emails = connectToMySQL('users').query_db(query)
+        emails = connectToMySQL('recipes').query_db(query)
         return emails
 
     @staticmethod
@@ -64,9 +66,7 @@ class User:
             flash('Invalid username/ password')
             return True
         query = 'SELECT id, password FROM users WHERE email = %(email)s'
-        user = connectToMySQL('users').query_db(query, data)
-        print(user)
-        print(data)
+        user = connectToMySQL('recipes').query_db(query, data)
         if bcrypt.check_password_hash(user[0]['password'], data['password']):
             session['user_id'] = user[0]['id']
             return user
@@ -74,3 +74,10 @@ class User:
             session['is_reg'] = False
             flash('Invalid username/ password')
             return True
+
+    @classmethod
+    def get_user_from_id(cls, id):
+        query = 'SELECT * FROM users WHERE id = %(id)s'
+        data = {'id': id}
+        result = connectToMySQL('recipes').query_db(query, data)
+        return cls(result[0])

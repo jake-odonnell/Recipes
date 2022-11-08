@@ -9,7 +9,7 @@ def home():
 
 @app.route('/login')
 def r_login():
-    if session:
+    if session.get('first_name'):
         data = {
         'first_name': session['first_name'],
         'last_name': session['last_name'],
@@ -21,7 +21,6 @@ def r_login():
             'last_name': '',
             'email': ''
         }
-        print(data)
     return render_template('login.html', info = data)
 
 @app.route('/add-user', methods = ['POST'])
@@ -42,11 +41,10 @@ def f_register():
         session['email'] = request.form['email']
         return redirect('/login')
 
-@app.route('/login', methods = ['POST'])
+@app.route('/login-user', methods = ['POST'])
 def f_login():
-    print(request.form)
     user = User.login(request.form)
-    if user:
+    if user == True:
         return redirect('/login')
     else:
         return redirect('/home')
@@ -55,11 +53,3 @@ def f_login():
 def logout():
     session.clear()
     return redirect('/login')
-
-@app.route('/home')
-def r_home():
-    if session.get('user_id') == None:
-        return redirect('/login')
-    else:
-        id = session['user_id']
-        return render_template('home.html', id = id)

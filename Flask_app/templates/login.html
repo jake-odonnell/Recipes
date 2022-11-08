@@ -39,7 +39,7 @@
         </div>
 
         <div class="form d-flex bg-dark col-4 p-3  mt-3">
-            <form action="/login" method = "post">
+            <form action="/login-user" method = "post">
                 <h1 class="text-success">Login</h1>
                 {% if session['is_reg'] == False%}
                     {% with messages = get_flashed_messages() %}

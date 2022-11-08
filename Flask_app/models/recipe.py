@@ -28,6 +28,7 @@ class Recipe:
         query = 'SELECT * FROM recipes LEFT JOIN users ON users.id = recipes.user_id WHERE recipes.id = %(id)s;'
         data = {'id': id}
         result = connectToMySQL('recipes').query_db(query, data)
+        print(result[0])
         return cls(result[0])
 
     @staticmethod
@@ -39,7 +40,6 @@ class Recipe:
     @staticmethod
     def val_recipe(data:dict):
         is_val = True
-        print(data)
         if len(data['name']) < 3:
             flash('Must include recipe name with at least 3 characters')
             is_val = False
@@ -60,14 +60,15 @@ class Recipe:
     @staticmethod
     def edit_recipe(data:dict):
         query = """UPDATE recipes
-        SET name = %(name)s, description = %(description)s, instruction = %(instructions)s, made_at = %(made_at)s, under = %(under)s
-        WHERE id = user_id"""
+        SET name = %(name)s, description = %(description)s, instructions = %(instructions)s, made_at = %(made_at)s, under = %(under)s
+        WHERE id = %(id)s"""
         connectToMySQL('recipes').query_db(query, data)
         return
 
 
     @staticmethod
-    def delete_recipe(data):
+    def delete_recipe(id):
+        data = {'id': id}
         query = 'DELETE FROM recipes WHERE id = %(id)s;'
         connectToMySQL('recipes').query_db(query, data)
         return

@@ -31,7 +31,9 @@ def f_add_recipe():
 def delete_recipe(id):
     if session.get('user_id') == None:
         return redirect('/login')
-    Recipe.delete_recipe(id)
+    recipe = Recipe.get_recipe_from_id(id)
+    if session.get('user_id') == recipe.user_id:
+        Recipe.delete_recipe(id)
     return redirect('/home')
 
 @app.route('/view/<id>')
@@ -50,12 +52,12 @@ def r_edit_recipe(id):
     recipe = Recipe.get_recipe_from_id(id)
     if user.first_name != recipe.creator:
         return redirect('/home')
-    print(recipe.under)
     return render_template('edit_recipe.html', recipe = recipe, user = user)
 
 @app.route('/edit-recipe', methods = ['POST'])
 def f_edit_recipe():
     if Recipe.val_recipe(request.form):
         Recipe.edit_recipe(request.form)
+        return redirect('/home')
     else: 
         return redirect('/edit/' + request.form['id'])
